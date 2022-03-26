@@ -26,7 +26,7 @@ public:
     void free_conn( conn* connection );         //断开连接，并归还连接资源到回收池
     int get_used_conn_cnt();                    //当前正在使用的连接数，用于计算当前进程的忙绿度
     void recycle_conns();                       //从回收池中回收连接到连接池
-    RET_CODE process( int fd, OP_TYPE type );   //工作处理线程
+    RET_CODE process( int fd, OP_TYPE type );   //工作处理进程
 
 private:
     static int m_epollfd;

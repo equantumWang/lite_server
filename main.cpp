@@ -210,7 +210,7 @@ int main( int argc, char* argv[] )
     //memcpy( cfg_host.m_hostname, "127.0.0.1", strlen( "127.0.0.1" ) );
     //cfg_host.m_port = 54321;
     //cfg_host.m_conncnt = 5;
-    processpool< conn, host, mgr >* pool = processpool< conn, host, mgr >::create( listenfd, logical_srv.size() );  //创建线程池实例
+    processpool< conn, host, mgr >* pool = processpool< conn, host, mgr >::create( listenfd, logical_srv.size() );  //创建进程池实例
     if( pool )
     {
         pool->run( logical_srv );

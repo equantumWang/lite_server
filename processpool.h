@@ -41,7 +41,7 @@ private:
 public:
     static processpool< C, H, M >* create( int listenfd, int process_number = 8 )
     {
-        if( !m_instance )   //只允许一个线程池实例存在
+        if( !m_instance )   //只允许一个进程池实例存在
         {
             m_instance = new processpool< C, H, M >( listenfd, process_number );
         }
@@ -104,10 +104,10 @@ processpool< C, H, M >::processpool( int listenfd, int process_number )     //�
 {
     assert( ( process_number > 0 ) && ( process_number <= MAX_PROCESS_NUMBER ) );
 
-    m_sub_process = new process[ process_number ];  //创建n个线程子实例
+    m_sub_process = new process[ process_number ];  //创建n个进程子实例
     assert( m_sub_process );
 
-    for( int i = 0; i < process_number; ++i )   //创建n个子线程，并建立与父进程的管道
+    for( int i = 0; i < process_number; ++i )   //创建n个子进程，并建立与父进程的管道
     {
         int ret = socketpair( PF_UNIX, SOCK_STREAM, 0, m_sub_process[i].m_pipefd ); //创建的是全双工通道
         assert( ret == 0 );
