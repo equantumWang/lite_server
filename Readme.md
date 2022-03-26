@@ -38,6 +38,6 @@ Webbench压力测试
 
 Ref:
 
-1. `https://github.com/liu-jianhao/springsnail `
+1. [GitHub - liu-jianhao/springsnail: 《Linux 高性能服务器》附带的项目程序springsnil详细解读，一个负载均衡服务器](https://github.com/liu-jianhao/springsnail)
 
-2. `https://github.com/qinguoyi/TinyWebServer`
+2. [GitHub - qinguoyi/TinyWebServer: Linux下C++轻量级Web服务器](https://github.com/qinguoyi/TinyWebServer)
