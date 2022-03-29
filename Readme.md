@@ -8,7 +8,7 @@
 
 ## 框架1.0：
 
-<img title="" src="file:///D:/计算机/springsnail/1.0Framework.png" alt="1.0Framework.png" width="679" data-align="center">
+[framework](https://github.com/equantumWang/lite_server/blob/master/1.0Framework.png)
 
 notes:
 
