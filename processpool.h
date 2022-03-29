@@ -65,7 +65,7 @@ private:
     static const int USER_PER_PROCESS = 65536;
     static const int MAX_EVENT_NUMBER = 10000;  //epoll事件数上限
     int m_process_number;                       //进程池中的进程总数
-    int m_idx;                                  //进程池序号
+    int m_idx;                                  //子进程从进程池中的序号 从0开始
     int m_epollfd;                              //epoll内核事件表的标识
     int m_listenfd;                             //监听socket
     int m_stop;                                 //子进程通过m_stop决定是否停止运行
