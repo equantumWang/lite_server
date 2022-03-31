@@ -5,12 +5,7 @@
 2022/3/26: 仅在原有代码上进行注释。
 
 ## 框架1.0：
-
-<<<<<<< HEAD
-![framework](https://github.com/equantumWang/lite_server/blob/master/1.0Framework.png) 
-=======
-![framework](https://github.com/equantumWang/lite_server/blob/master/1.0Framework.png)
->>>>>>> 27a25c51ae6a6407ee66c9c764cd900726441b40
+![framework](https://github.com/equantumWang/lite_server/blob/master/img/1.0Framework.png) 
 
 notes:
 
