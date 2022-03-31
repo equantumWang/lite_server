@@ -6,7 +6,7 @@
 
 ## 框架1.0：
 
-![framework](https://github.com/equantumWang/lite_server/blob/master/1.0Framework.png) 
+![framework](https://github.com/equantumWang/lite_server/blob/master/img/1.0Framework.png) 
 
 notes:
 
