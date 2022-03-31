@@ -41,7 +41,7 @@ private:
 public:
     static processpool< C, H, M >* create( int listenfd, int process_number = 8 )
     {
-        if( !m_instance )   //只允许一个进程池实例存在
+        if( !m_instance )   //只允许一进程池实例存在
         {
             m_instance = new processpool< C, H, M >( listenfd, process_number );
         }
@@ -49,6 +49,7 @@ public:
     }
     ~processpool()
     {
+        delete m_instance;
         delete [] m_sub_process;
     }
     void run( const vector<H>& arg );   //进程池启动
@@ -65,7 +66,7 @@ private:
     static const int USER_PER_PROCESS = 65536;
     static const int MAX_EVENT_NUMBER = 10000;  //epoll事件数上限
     int m_process_number;                       //进程池中的进程总数
-    int m_idx;                                  //子进程从进程池中的序号 从0开始
+    int m_idx;                                  //进程池序号
     int m_epollfd;                              //epoll内核事件表的标识
     int m_listenfd;                             //监听socket
     int m_stop;                                 //子进程通过m_stop决定是否停止运行
@@ -104,6 +105,7 @@ processpool< C, H, M >::processpool( int listenfd, int process_number )     //�
 {
     assert( ( process_number > 0 ) && ( process_number <= MAX_PROCESS_NUMBER ) );
 
+    printf("processpool is created\n");
     m_sub_process = new process[ process_number ];  //创建n个进程子实例
     assert( m_sub_process );
 
@@ -112,6 +114,7 @@ processpool< C, H, M >::processpool( int listenfd, int process_number )     //�
         int ret = socketpair( PF_UNIX, SOCK_STREAM, 0, m_sub_process[i].m_pipefd ); //创建的是全双工通道
         assert( ret == 0 );
 
+        printf("sub_process_%d is created\n", i);
         m_sub_process[i].m_pid = fork();
         assert( m_sub_process[i].m_pid >= 0 );
         if( m_sub_process[i].m_pid > 0 )
@@ -167,6 +170,7 @@ void processpool< C, H, M >::setup_sig_pipe()
 template< typename C, typename H, typename M >
 void processpool< C, H, M >::run( const vector<H>& arg )    //由idx决定运行父还是子
 {
+    printf("process idx: %d is running\n", m_idx);
     if( m_idx != -1 )
     {
         run_child( arg );
@@ -191,6 +195,8 @@ void processpool< C, H, M >::run_child( const vector<H>& arg )
     add_read_fd( m_epollfd, pipefd_read );
 
     epoll_event events[ MAX_EVENT_NUMBER ];
+
+    printf("run_child m_idx: %d ; host name: %s \n",m_idx, arg[m_idx].m_hostname);
 
     M* manager = new M( m_epollfd, arg[m_idx] );
     assert( manager );
@@ -237,9 +243,9 @@ void processpool< C, H, M >::run_child( const vector<H>& arg )
                     }
                     add_read_fd( m_epollfd, connfd );
                     C* conn = manager->pick_conn( connfd );
-                    if( !conn )
+                    if( !conn ) 
                     {
-                        closefd( m_epollfd, connfd );
+                        closefd( m_epollfd, connfd );//当前没有空闲可用连接，从epoll中移除connfd
                         continue;
                     }
                     conn->init_clt( connfd, client_address );
@@ -320,6 +326,7 @@ void processpool< C, H, M >::run_child( const vector<H>& arg )
         }
     }
 
+    delete manager;
     close( pipefd_read );
     close( m_epollfd );
 }

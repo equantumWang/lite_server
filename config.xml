@@ -1,14 +1,10 @@
-Listen 127.0.0.1:8080
+Listen 126.0.1.1:8080
 
 <logical_host>
   <name>59.111.160.195</name>
   <port>80</port>
-  <conns>2</conns>
+  <conns>3</conns>
 </logical_host>
-<!-- <logical_host>
-  <name>59.111.19.33</name>
-  <port>80</port>
-  <conns>2</conns>
-</logical_host> -->
 
-<!-- 第一个Listen地址是负载均衡服务器地址，下面两个为真正的逻辑服务器 -->
+
+<!-- 第一个Listen地址是负载均衡服务器地址，下面两个为真正的逻辑服务器(现在只有一个了) -->

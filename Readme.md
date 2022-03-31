@@ -4,11 +4,9 @@
 
 2022/3/26: 仅在原有代码上进行注释。
 
-
-
 ## 框架1.0：
 
-<img title="" src="file:///D:/计算机/springsnail/1.0Framework.png" alt="1.0Framework.png" width="679" data-align="center">
+![framework](https://github.com/equantumWang/lite_server/blob/master/1.0Framework.png) 
 
 notes:
 
@@ -20,8 +18,6 @@ notes:
 
 4) 目前config.xml中只配置了一个服务器地址（网易云音乐），因此只有一个子进程被创建。实际上后续可以改成自己的服务器地址来测试，并实现某些功能。
 
-
-
 ## 使用方法：
 
 1. 编译：
@@ -31,8 +27,6 @@ notes:
 2. 运行:
    
    `# ./springsnail -f config.xml`
-   
-   
 
 ## Todo list:
 
@@ -51,8 +45,6 @@ HTTP协议支持
 Webbench压力测试
 
 服务器数据库实现web注册、登录以及请求服务器数据内容
-
-
 
 ## More:
 

@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include "fdwrapper.h"
 #include "conn.h"
+#include"InetAddress.h"
 
 using std::map;
 
@@ -30,8 +31,8 @@ public:
 
 private:
     static int m_epollfd;
-    map< int, conn* > m_conns;  //分配的连接池
-    map< int, conn* > m_used;   //正在使用的连接
+    map< int, conn* > m_conns;  //连接池中空闲的连接
+    map< int, conn* > m_used;   //连接池中正在使用的连接
     map< int, conn* > m_freed;  //回收池
     host m_logic_srv;           //逻辑服务器
 };

@@ -17,6 +17,7 @@
 #include <exception>
 #include "log.h"
 #include "mgr.h"
+#include"InetAddress.h"
 
 using std::pair;
 
@@ -41,17 +42,21 @@ mgr::mgr( int epollfd, const host& srv ) : m_logic_srv( srv )
 {
     m_epollfd = epollfd;
     int ret = 0;
-    struct sockaddr_in address;
-    bzero( &address, sizeof( address ) );
-    address.sin_family = AF_INET;
-    inet_pton( AF_INET, srv.m_hostname, &address.sin_addr );
-    address.sin_port = htons( srv.m_port );
+    // struct sockaddr_in address;
+    // bzero( &address, sizeof( address ) );
+    // address.sin_family = AF_INET;
+    // inet_pton( AF_INET, srv.m_hostname, &address.sin_addr );
+    // address.sin_port = htons( srv.m_port );
+
+    InetAddress *addr = new InetAddress(srv.m_hostname, srv.m_port);//在函数结束时释放
+    socklen_t addr_len = addr->getAddr_len();
+
     log( LOG_INFO, __FILE__, __LINE__, "logcial srv host info: (%s, %d)", srv.m_hostname, srv.m_port );
 
     for( int i = 0; i < srv.m_conncnt; ++i )
     {
         sleep( 1 );
-        int sockfd = conn2srv( address );
+        int sockfd = conn2srv( addr->getAddr() );
         if( sockfd < 0 )
         {
             log( LOG_ERR, __FILE__, __LINE__, "build connection %d failed", i );
@@ -69,11 +74,14 @@ mgr::mgr( int epollfd, const host& srv ) : m_logic_srv( srv )
                 close( sockfd );
                 continue;
             }
-            tmp->init_srv( sockfd, address );
-            //在连接管理中添加连接到逻辑服务器的sockfd
+            tmp->init_srv( sockfd, addr->getAddr() );
+            //在连接池中[空闲的连接]部分加入服务器端提前开好的sockfd和tmp
             m_conns.insert( pair< int, conn* >( sockfd, tmp ) );
         }
     }
+    log( LOG_INFO, __FILE__, __LINE__, "building connections accomplished" );
+    
+    delete addr;
 }
 
 mgr::~mgr()
@@ -87,6 +95,8 @@ int mgr::get_used_conn_cnt()
 
 conn* mgr::pick_conn( int cltfd  )
 {
+    //一旦有客户连接到来，从空闲连接池中选取一个空闲连接，并将其对应的clientfd srvfd 加入使用连接池中
+    
     if( m_conns.empty() )
     {
         log( LOG_ERR, __FILE__, __LINE__, "%s", "not enough srv connections to server" );
@@ -102,9 +112,9 @@ conn* mgr::pick_conn( int cltfd  )
         return NULL;
     }
     m_conns.erase( iter );
-    m_used.insert( pair< int, conn* >( cltfd, tmp ) );
+    m_used.insert( pair< int, conn* >( cltfd, tmp ) ); 
     m_used.insert( pair< int, conn* >( srvfd, tmp ) );
-    add_read_fd( m_epollfd, cltfd );
+    add_read_fd( m_epollfd, cltfd );    //并将对应的客户端fd和服务器fd加入epoll
     add_read_fd( m_epollfd, srvfd );
     log( LOG_INFO, __FILE__, __LINE__, "bind client sock %d with server sock %d", cltfd, srvfd );
     return tmp;
@@ -155,7 +165,7 @@ RET_CODE mgr::process( int fd, OP_TYPE type )
     {
         return NOTHING;
     }
-    if( connection->m_cltfd == fd )     //连接上发生的是客户端的事件
+    if( connection->m_cltfd == fd )     //连接上发生的是客户端的事件(例如客户端有读/写请求)
     {
         int srvfd = connection->m_srvfd;
         switch( type )

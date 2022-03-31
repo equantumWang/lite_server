@@ -19,6 +19,7 @@
 #include "conn.h"
 #include "mgr.h"
 #include "processpool.h"
+#include"InetAddress.h"
 
 using std::vector;
 
@@ -194,13 +195,17 @@ int main( int argc, char* argv[] )
     assert( listenfd >= 0 );
  
     int ret = 0;
-    struct sockaddr_in address;
-    bzero( &address, sizeof( address ) );
-    address.sin_family = AF_INET;
-    inet_pton( AF_INET, ip, &address.sin_addr );
-    address.sin_port = htons( port );
+    // struct sockaddr_in address;
+    // bzero( &address, sizeof( address ) );
+    // address.sin_family = AF_INET;
+    // inet_pton( AF_INET, ip, &address.sin_addr );
+    // address.sin_port = htons( port );
 
-    ret = bind( listenfd, ( struct sockaddr* )&address, sizeof( address ) );
+    InetAddress *addr = new InetAddress(ip, port);
+    socklen_t addr_len = addr->getAddr_len();
+    struct sockaddr_in _addr = addr->getAddr();
+
+    ret = bind( listenfd, ( struct sockaddr* )&_addr, addr_len);
     assert( ret != -1 );
 
     ret = listen( listenfd, 5 );
@@ -218,5 +223,6 @@ int main( int argc, char* argv[] )
     }
 
     close( listenfd );
+    delete addr;
     return 0;
 }
