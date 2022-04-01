@@ -1,4 +1,4 @@
-all: log.o fdwrapper.o conn.o mgr.o addr.o springsnail 
+all: springsnail server client 
 
 log.o: log.cpp log.h
 	g++ -c log.cpp -o log.o
@@ -25,4 +25,6 @@ client:
 	g++ util.cpp InetAddress.cpp client.cpp -o client
 
 clean:
-	rm *.o springsnail client server
+	rm *.o springsnail rm server && rm client
+
+	

@@ -1,10 +1,21 @@
 # Springsnail 轻量负载均衡服务器
 
+## Version:1.1
+
+1. 添加InetAddress类，负责IP和端口的生成；
+
+2. 添加util类，负责统一错误信息（一些地方未完全更改为util类实现）
+
+3. **添加测试用的服务器server 与 客户端client**
+
+server与client的用法在**使用方法**部分。
+
 ## Version: 1.0
 
 2022/3/26: 仅在原有代码上进行注释。
 
 ## 框架1.0：
+
 ![framework](https://github.com/equantumWang/lite_server/blob/master/img/1.0Framework.png) 
 
 notes:
@@ -23,15 +34,56 @@ notes:
    
    `# make all`
 
-2. 运行:
+2. 运行逻辑服务器:
+   
+   `# ./server`
+
+3. 运行负载均衡服务器：
    
    `# ./springsnail -f config.xml`
+
+4. 运行测试客户端
+   
+   `# ./client`
+
+在运行负载均衡服务器时，会提醒连接到逻辑服务器，且逻辑服务器会提醒有连接建立：
+
+**负载均衡服务器：**
+
+```sh
+IP: 127.0.0.1 Port: 54321
+bind serverfd: 4 IP: 127.0.0.1 Port: 54321
+processpool is created
+sub_process_0 is created
+process idx: -1 is running
+process idx: 0 is running
+run_child m_idx: 0 ; host name: 127.0.0.2 
+[ 04/01/22 20:10:11 ] mgr.cpp:0054 info: logcial srv host info: (127.0.0.2, 1234)
+[ 04/01/22 20:10:12 ] mgr.cpp:0066 info: build connection 0 to server success
+[ 04/01/22 20:10:13 ] mgr.cpp:0066 info: build connection 1 to server success
+[ 04/01/22 20:10:14 ] mgr.cpp:0066 info: build connection 2 to server success
+[ 04/01/22 20:10:14 ] mgr.cpp:0082 info: building connections accomplished
+```
+
+**逻辑服务器：**
+
+```shell
+new client fd 5! IP: 127.0.0.1 Port: 39456
+new client fd 6! IP: 127.0.0.1 Port: 39460
+new client fd 7! IP: 127.0.0.1 Port: 39466
+```
+
+此时可以运行客户端程序，并在客户端程序中输入字符串按回车发送到服务器，逻辑服务器会将其回显：
+
+## 更新Log:
+
+  具体的修改与添加位于文件的log.md
 
 ## Todo list:
 
 相关类封装
 
-本机服务器、客户端的测试程序
+~~本机服务器、客户端的测试程序~~
 
 ~~框架图~~
 
