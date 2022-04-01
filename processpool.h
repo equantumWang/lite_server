@@ -241,6 +241,9 @@ void processpool< C, H, M >::run_child( const vector<H>& arg )
                         log( LOG_ERR, __FILE__, __LINE__, "errno: %s", strerror( errno ) );
                         continue;
                     }
+                    printf("new client fd %d! IP: %s PortL %d\n", connfd,
+						inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+
                     add_read_fd( m_epollfd, connfd );
                     C* conn = manager->pick_conn( connfd );
                     if( !conn ) 

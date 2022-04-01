@@ -1,8 +1,8 @@
-Listen 126.0.1.1:8080
+Listen 127.0.0.1:54321
 
 <logical_host>
-  <name>59.111.160.195</name>
-  <port>80</port>
+  <name>127.0.0.2</name>
+  <port>1234</port>
   <conns>3</conns>
 </logical_host>
 

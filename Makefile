@@ -1,4 +1,4 @@
-all: log.o fdwrapper.o conn.o mgr.o addr.o springsnail
+all: log.o fdwrapper.o conn.o mgr.o addr.o springsnail 
 
 log.o: log.cpp log.h
 	g++ -c log.cpp -o log.o
@@ -18,5 +18,11 @@ addr.o: InetAddress.cpp InetAddress.h
 springsnail: processpool.h main.cpp log.o fdwrapper.o conn.o mgr.o addr.o
 	g++ processpool.h log.o fdwrapper.o conn.o mgr.o addr.o main.cpp -o springsnail
 
+server: 
+	g++ util.cpp fdwrapper.cpp InetAddress.cpp server.cpp -o server
+
+client:
+	g++ util.cpp InetAddress.cpp client.cpp -o client
+
 clean:
-	rm *.o springsnail
+	rm *.o springsnail client server

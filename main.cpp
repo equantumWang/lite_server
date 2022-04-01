@@ -167,7 +167,7 @@ int main( int argc, char* argv[] )
         }
         else if( tmp3 = strstr( tmp, "Listen" ) )
         {
-            tmp_hostname = tmp3 + 6;
+            tmp_hostname = tmp3 + 7;    //0401更正了位置
             tmp4 = strstr( tmp_hostname, ":" );
             if( !tmp4 )
             {
@@ -176,7 +176,7 @@ int main( int argc, char* argv[] )
             }
             *tmp4++ = '\0';
             tmp_host.m_port = atoi( tmp4 );
-            memcpy( tmp_host.m_hostname, tmp3, strlen( tmp3 ) );
+            memcpy( tmp_host.m_hostname, tmp_hostname, strlen( tmp3 ) );
             balance_srv.push_back( tmp_host );
             memset( tmp_host.m_hostname, '\0', 1024 );
         }
@@ -190,6 +190,7 @@ int main( int argc, char* argv[] )
     }
     const char* ip = balance_srv[0].m_hostname;
     int port = balance_srv[0].m_port;
+    printf(" IP: %s Port: %d\n",ip, port);
 
     int listenfd = socket( PF_INET, SOCK_STREAM, 0 );
     assert( listenfd >= 0 );
@@ -206,6 +207,8 @@ int main( int argc, char* argv[] )
     struct sockaddr_in _addr = addr->getAddr();
 
     ret = bind( listenfd, ( struct sockaddr* )&_addr, addr_len);
+    printf("bind serverfd: %d  IP: %s Port: %d\n", 
+        listenfd, inet_ntoa(_addr.sin_addr), ntohs(_addr.sin_port));
     assert( ret != -1 );
 
     ret = listen( listenfd, 5 );
